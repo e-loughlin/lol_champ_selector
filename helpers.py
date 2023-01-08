@@ -4,7 +4,7 @@ import math
 import time
 import os
 
-def wait_until_img_appears_or_dodge_occurs(image_paths, max_tries=3, confidence=0.9, exit_on_fail=True, sleep_time_sec=1):
+def wait_until_img_appears_or_dodge_occurs(image_paths, max_tries=3, confidence=0.9, exit_on_fail=False, sleep_time_sec=1):
     try_count = 0
     location = None
     game_dodged = None

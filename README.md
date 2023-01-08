@@ -14,6 +14,8 @@ You can run this Python script while you have League of Legends open and you've 
 4. Run `python select_champ.py --champs zyra taric lulu --bans mord mundo pyke`. The actual champs you select here are the priorities of champs to play, and ban, respectively. For example, the first priority would be to play Zyra and ban Mordekaiser.
 5. Queue up for a draft game.
 
+Note: You'll have to ensure that you don't have something like Porofessor popping up in front of your champ select lobby screen, as the script is looking for matching screenshots and will fail if another window is blocking your LoL window.
+
 ## If It's Not Working
 
 1. If the script is failing, it may be because your resolution / video settings differ from mine when I took the screenshots. This script uses `pyautogui` and relies on matching screenshots. Therefore, if your screen doesn't match the screenshots provided, it might not work. You could resolve this problem by taking your own screenshots and replacing the images in the `img` directory.

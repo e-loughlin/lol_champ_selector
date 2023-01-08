@@ -46,6 +46,13 @@ if __name__ == "__main__":
         else:
             continue
 
+        print("Regaining focus on League Screen...")
+        # Ensure focus is regained 
+        for _ in range(5):
+            x, _ = wait_until_img_appears_or_dodge_occurs(["top_bar.png"], math.inf)
+            gui.click(x)
+            time.sleep(1)
+
         print("Waiting for champ pre-select...")
         # Pre-Select your Champ
         x, dodged = wait_until_img_appears_or_dodge_occurs(["search.png"], math.inf)
@@ -53,44 +60,78 @@ if __name__ == "__main__":
             continue
         gui.click(x, interval=rt())
         gui.write(args.champs[0], interval=random.uniform(0.1, 0.25))
-        x, dodged = wait_until_img_appears_or_dodge_occurs(["champ_box.png"], math.inf)
-        gui.click(x, interval=rt())
-        print("Champ Selected...")
+        x, dodged = wait_until_img_appears_or_dodge_occurs(["champ_box.png"], 3)
         if dodged: 
             continue
+        if x:
+            gui.click(x, interval=rt())
+            print("Champ {} Pre-Selected...".format(args.champ[0]))
+        else:
+            print("Champ {} not found...".format(args.champ[0]))
 
         # Ban A Champ
         print("Waiting for Bans...")
         # TODO: Iterate over list of bans
-        x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_a_champ.png"], math.inf)
-        if dodged: 
+        for ban in args.bans:
+            print("Attempting to ban {}".format(ban))
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_a_champ.png"], math.inf)
+            if dodged: 
+                break
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["search.png"], math.inf)
+            if dodged: 
+                break
+            gui.click(x, interval=rt())
+            gui.press('backspace', presses=25, interval=0.07)
+            gui.write(args.bans[0], interval=random.uniform(0.05, 0.1))
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_border.png"], 2)
+            if dodged: 
+                break
+            if not x:
+                print("Could not ban {}".format(ban))
+                continue
+            gui.click(x, interval=rt())
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_button.png"], 2)
+            if dodged: 
+                break
+            if not x:
+                print("Could not ban {}".format(ban))
+                continue
+            gui.click(x, interval=rt())
+            print("Champ {} Banned...".format(ban))
+        if dodged:
             continue
-        x, dodged = wait_until_img_appears_or_dodge_occurs(["search.png"], math.inf)
-        if dodged: 
-            continue
-        gui.click(x, interval=rt())
-        gui.write(args.bans[0], interval=random.uniform(0.1, 0.25))
-        x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_border.png"], math.inf)
-        if dodged: 
-            continue
-        gui.click(x, interval=rt())
-        x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_button.png"], math.inf)
-        if dodged: 
-            continue
-        gui.click(x, interval=rt())
-        print("Champ Banned...")
 
         # Lock In Your Champ
-        x, dodged = wait_until_img_appears_or_dodge_occurs(["pick_your_champion.png", "pick_your_champion_2.png"], math.inf)
-        if dodged: 
-            continue
-        x, dodged = wait_until_img_appears_or_dodge_occurs(["search.png"], math.inf)
-        if dodged: 
-            continue
-        gui.click(x, interval=rt())
+        for champ in args.champs:
+            print("Attempting to select {}".format(champ))
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["pick_your_champion.png", "pick_your_champion_2.png"], math.inf)
+            if dodged: 
+                break
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["search.png"], math.inf)
+            if dodged: 
+                break
+            gui.click(x, interval=rt())
+            gui.press('backspace', presses=25, interval=random.uniform(0.05,0.1))
+            gui.write(champ, interval=random.uniform(0.5,0.13))
 
-        x, dodged = wait_until_img_appears_or_dodge_occurs(["lock_in.png"], math.inf)
-        if dodged: 
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["champ_box.png"], 2)
+            gui.click(x, interval=rt())
+            if dodged:
+                break
+            if not x:
+                print("Could not select {}".format(champ))
+                continue
+
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["lock_in.png"], 2)
+            if dodged: 
+                break
+            if not x:
+                print("Could not select {}".format(champ))
+                continue
+
+            print("Locked In!")
+            gui.click(x, interval=rt())
+        if dodged:
             continue
-        print("Locked In!")
-        gui.click(x, interval=rt())
+
+        # TODO: End script if a game starts
