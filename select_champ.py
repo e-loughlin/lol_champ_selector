@@ -65,9 +65,9 @@ if __name__ == "__main__":
             continue
         if x:
             gui.click(x, interval=rt())
-            print("Champ {} Pre-Selected...".format(args.champ[0]))
+            print("Champ {} Pre-Selected...".format(args.champs[0]))
         else:
-            print("Champ {} not found...".format(args.champ[0]))
+            print("Champ {} not found...".format(args.champs[0]))
 
         # Ban A Champ
         print("Waiting for Bans...")
