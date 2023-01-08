@@ -39,16 +39,15 @@ if __name__ == "__main__":
 
     while(True):
         print("Waiting for queue pop...")
-        x, dodged = wait_until_img_appears_or_dodge_occurs(["accept.png"], math.inf)
+        x, _ = wait_until_img_appears_or_dodge_occurs(["accept.png"], math.inf)
         if x:
             print("Game accepted!")
             gui.click(x, interval=rt())
-        if dodged:
+        else:
             continue
 
         print("Waiting for champ pre-select...")
         # Pre-Select your Champ
-        #TODO: Iterate through multiple possible champs to select
         x, dodged = wait_until_img_appears_or_dodge_occurs(["search.png"], math.inf)
         if dodged: 
             continue

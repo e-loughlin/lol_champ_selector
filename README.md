@@ -11,7 +11,7 @@ You can run this Python script while you have League of Legends open and you've 
 1. Clone this repository.
 2. In a `cmd` prompt (Windows Command Prompt, or Powershell, for example) navigate to where you cloned the repository.
 3.  Run `python -m pip install -r requirements.txt`. 
-4. Run `python lol_champ_select.py --champs zyra taric lulu --bans mord mundo pyke`. The actual champs you select here are the priorities of champs to play, and ban, respectively. For example, the first priority would be to play Zyra and ban Mordekaiser.
+4. Run `python select_champ.py --champs zyra taric lulu --bans mord mundo pyke`. The actual champs you select here are the priorities of champs to play, and ban, respectively. For example, the first priority would be to play Zyra and ban Mordekaiser.
 5. Queue up for a draft game.
 
 ## If It's Not Working
