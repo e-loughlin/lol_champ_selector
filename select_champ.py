@@ -12,16 +12,26 @@ if __name__ == "__main__":
 
     CLI=argparse.ArgumentParser()
     CLI.add_argument(
-    "--champs",  # name on the CLI - drop the `--` for positional/required parameters
-    nargs="*",  # 0 or more values expected => creates a list
+    "--champs", 
     type=str,
-    default=[],  # default if nothing is provided
+    default=[],  
     )
     CLI.add_argument(
     "--bans",
     nargs="*",
-    type=str,  # any type/callable can be used here
+    type=str, 
     default=[],
+    )
+    CLI.add_argument(
+    "--insult",
+    type=str,  
+    default=None,
+    )
+    args = CLI.parse_args()
+    CLI.add_argument(
+    "--fact",
+    type=bool,  
+    default=False,
     )
     args = CLI.parse_args()
     # access CLI options
@@ -133,5 +143,21 @@ if __name__ == "__main__":
             gui.click(x, interval=rt())
         if dodged:
             continue
+
+        if args.insult:
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["chat.png"], math.inf)
+            if dodged:
+                continue
+            gui.click(x)
+            gui.write(generate_random_insult(args.insult), random.uniform(0.05, 0.15))
+            gui.press("enter")
+
+        if args.fact:
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["chat.png"], math.inf)
+            if dodged:
+                continue
+            gui.click(x)
+            gui.write(generate_random_fact(args.fact), random.uniform(0.05, 0.15))
+            gui.press("enter")
 
         # TODO: End script if a game starts

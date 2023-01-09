@@ -3,6 +3,7 @@ import pyautogui as gui
 import math
 import time
 import os
+import random
 
 def wait_until_img_appears_or_dodge_occurs(image_paths, max_tries=3, confidence=0.9, exit_on_fail=False, sleep_time_sec=1):
     try_count = 0
@@ -30,3 +31,12 @@ def wait_until_img_appears_or_dodge_occurs(image_paths, max_tries=3, confidence=
 
     return location, False
 
+def generate_random_insult(name):
+    with open('./other/insults.txt') as f:
+        lines = f.read().splitlines()
+    return "Hey {}: {}".format(name, random.choice(lines))
+
+def generate_random_fact():
+    with open('./other/facts.txt') as f:
+        lines = f.read().splitlines()
+    return "Random Fact: {}".format(random.choice(lines))
