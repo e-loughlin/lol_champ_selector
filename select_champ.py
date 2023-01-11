@@ -41,22 +41,14 @@ if __name__ == "__main__":
     if len(args.bans) == 0:
         exit("You must select at least 1 champ to ban.")
 
-    if args.insult:
-        print("Random Insult:")
-        print(generate_random_insult(args.insult))
-    if args.fact:
-        print("Random Fact:")
-        print(generate_random_fact())
-
     print("Champs (Order of Priority): %r" % args.champs)
     print("Bans (Order of Priority): %r" % args.bans)
 
     print("LoL Auto Game Starter: Ensure you have clicked \"Start Match\"...")
-    time.sleep(3)
 
     while(True):
         print("Waiting for queue pop...")
-        x, _ = wait_until_img_appears_or_dodge_occurs(["accept.png"], math.inf)
+        x = wait_until_img_appears(["accept.png"], math.inf)
         if x:
             print("Game accepted!")
             gui.click(x, interval=rt())
@@ -64,11 +56,9 @@ if __name__ == "__main__":
             continue
 
         print("Regaining focus on League Screen...")
-        # Ensure focus is regained 
-        for _ in range(5):
-            x, _ = wait_until_img_appears_or_dodge_occurs(["top_bar.png"], 1)
-            gui.click(x)
-            time.sleep(0.5)
+        print("Make sure no other windows are in front of the champ select window, or this will fail...")
+        
+        time.sleep(4)
 
         print("Waiting for champ pre-select...")
         # Pre-Select your Champ
@@ -76,8 +66,9 @@ if __name__ == "__main__":
         if dodged: 
             continue
         gui.click(x, clicks=2)
+        gui.press('backspace')
         gui.write(args.champs[0], interval=random.uniform(0.1, 0.25))
-        x, dodged = wait_until_img_appears_or_dodge_occurs(["champ_box.png"], 3)
+        x, dodged = wait_until_img_appears_or_dodge_occurs(["champ_box.png"], max_tries=1)
         if dodged: 
             continue
         if x:
@@ -88,7 +79,6 @@ if __name__ == "__main__":
 
         # Ban A Champ
         print("Waiting for Bans...")
-        # TODO: Iterate over list of bans
         for ban in args.bans:
             print("Attempting to ban {}".format(ban))
             x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_a_champ.png"], math.inf)
@@ -99,15 +89,15 @@ if __name__ == "__main__":
                 break
             gui.click(x, clicks=2)
             gui.press('backspace')
-            gui.write(args.bans[0], interval=random.uniform(0.05, 0.1))
-            x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_border.png"], 2)
+            gui.write(ban, interval=random.uniform(0.05, 0.1))
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_border.png"], 1)
             if dodged: 
                 break
             if not x:
                 print("Could not ban {}".format(ban))
                 continue
-            gui.click(x, interval=rt())
-            x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_button.png"], 2)
+            gui.click(x[0]-25, x[1], interval=rt())
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_button.png"], 1)
             if dodged: 
                 break
             if not x:
@@ -131,9 +121,9 @@ if __name__ == "__main__":
                 break
             gui.click(x, clicks=2)
             gui.press('backspace')
-            gui.write(champ, interval=random.uniform(0.5,0.13))
+            gui.write(champ, interval=random.uniform(0.05,0.13))
 
-            x, dodged = wait_until_img_appears_or_dodge_occurs(["champ_box.png"], max_tries=2)
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["champ_box.png"], max_tries=1, confidence=0.99)
             gui.click(x, interval=rt())
             if dodged:
                 break
@@ -141,7 +131,7 @@ if __name__ == "__main__":
                 print("Could not select {}".format(champ))
                 continue
 
-            x, dodged = wait_until_img_appears_or_dodge_occurs(["lock_in.png"], max_tries=2)
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["lock_in.png"], max_tries=1)
             if dodged: 
                 break
             if not x:
@@ -151,6 +141,7 @@ if __name__ == "__main__":
             print("Locked In!")
             gui.click(x, interval=rt())
             break
+
         if dodged:
             continue
 
@@ -159,7 +150,7 @@ if __name__ == "__main__":
             if dodged:
                 continue
             gui.click(x)
-            gui.write(generate_random_insult(args.insult), random.uniform(0.05, 0.15))
+            gui.write(generate_random_insult(args.insult), random.uniform(0.05, 0.06))
             gui.press("enter")
 
         x, dodged = wait_until_img_appears_or_dodge_occurs(["top_bar.png"], math.inf)
@@ -170,7 +161,12 @@ if __name__ == "__main__":
             if dodged:
                 continue
             gui.click(x)
-            gui.write(generate_random_fact(args.fact), random.uniform(0.05, 0.15))
+            gui.write(generate_random_fact(args.fact), random.uniform(0.05, 0.07))
             gui.press("enter")
 
-        # TODO: End script if a game starts
+        # End script if game starts
+        x, dodged = wait_until_img_appears_or_dodge_occurs(["game_started.png"], math.inf)
+        if dodged:
+            continue
+        if x:
+            exit("Game started! Have fun!")
