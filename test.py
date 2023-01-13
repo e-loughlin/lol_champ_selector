@@ -3,11 +3,10 @@ from helpers import *
 
 class TestImageDetection(unittest.TestCase):
     # def test_cannot_see_image_and_will_return_none(self):
-    #     x, dodged = wait_until_img_appears_or_dodge_occurs(["find_match.png"], max_tries=1, confidence=0.99)
+    #     x = wait_until_img_appears(["in_queue.png"], max_tries=1, confidence=0.98)
     #     # self.assertIsNone(x)
     #     gui.moveTo(x[0]-50, x[1])
     #     print(x)
-    #     self.assertFalse(dodged)
 
     def test_insult_ryan(self):
             x = wait_until_img_appears(["chat.png"], math.inf)

@@ -34,9 +34,14 @@ def wait_until_img_appears_or_dodge_occurs(image_paths, max_tries=3, confidence=
             if location:
                 break
 
-            game_dodged = gui.locateCenterOnScreen(os.path.join("./img", "home.png"), confidence=confidence)
-            if game_dodged:
-                return None, True
+            can_see_home_screen = gui.locateCenterOnScreen(os.path.join("./img", "in_queue.png"), confidence=0.98)
+            if can_see_home_screen:
+                # TODO: Add another screenshot for after you've accepted
+                can_accept_queue = gui.locateCenterOnScreen(os.path.join("./img", "accept.png"), confidence=0.98)
+                have_accepted_queue = gui.locateCenterOnScreen(os.path.join("./img", "have_accepted.png"), confidence=0.98)
+                game_dodged = not (can_accept_queue or have_accepted_queue)
+                if game_dodged:
+                    return None, True
 
             time.sleep(sleep_time_sec)
             try_count += 1

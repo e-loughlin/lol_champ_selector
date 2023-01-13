@@ -47,6 +47,7 @@ if __name__ == "__main__":
     print("LoL Auto Game Starter: Ensure you have clicked \"Start Match\"...")
 
     while(True):
+        preselect_champ = args.champs[0]
         print("Waiting for queue pop...")
         x = wait_until_img_appears(["accept.png"], math.inf)
         if x:
@@ -67,7 +68,7 @@ if __name__ == "__main__":
             continue
         gui.click(x, clicks=2)
         gui.press('backspace')
-        gui.write(args.champs[0], interval=random.uniform(0.1, 0.25))
+        gui.write(preselect_champ, interval=random.uniform(0.1, 0.25))
         x, dodged = wait_until_img_appears_or_dodge_occurs(["champ_box.png"], max_tries=1)
         if dodged: 
             continue
@@ -90,14 +91,14 @@ if __name__ == "__main__":
             gui.click(x, clicks=2)
             gui.press('backspace')
             gui.write(ban, interval=random.uniform(0.05, 0.1))
-            x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_border.png"], 1)
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_border.png"], 2)
             if dodged: 
                 break
             if not x:
                 print("Could not ban {}".format(ban))
                 continue
-            gui.click(x[0]-25, x[1], interval=rt())
-            x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_button.png"], 1)
+            gui.click(x[0]-25, x[1], interval=rt(), clicks=2)
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["ban_button.png"], 2)
             if dodged: 
                 break
             if not x:
@@ -116,22 +117,24 @@ if __name__ == "__main__":
             x, dodged = wait_until_img_appears_or_dodge_occurs(["pick_your_champion.png", "pick_your_champion_2.png"], math.inf)
             if dodged: 
                 break
-            x, dodged = wait_until_img_appears_or_dodge_occurs(["search.png"], math.inf)
-            if dodged: 
-                break
-            gui.click(x, clicks=2)
-            gui.press('backspace')
-            gui.write(champ, interval=random.uniform(0.05,0.13))
+            
+            if champ != preselect_champ:
+                x, dodged = wait_until_img_appears_or_dodge_occurs(["search.png"], math.inf)
+                if dodged: 
+                    break
+                gui.click(x, clicks=2)
+                gui.press('backspace')
+                gui.write(champ, interval=random.uniform(0.05,0.13))
 
-            x, dodged = wait_until_img_appears_or_dodge_occurs(["champ_box.png"], max_tries=1, confidence=0.99)
-            gui.click(x, interval=rt())
-            if dodged:
-                break
-            if not x:
-                print("Could not select {}".format(champ))
-                continue
+                x, dodged = wait_until_img_appears_or_dodge_occurs(["champ_box.png"], max_tries=2, confidence=0.95)
+                gui.click(x, interval=rt())
+                if dodged:
+                    break
+                if not x:
+                    print("Could not select {}".format(champ))
+                    continue
 
-            x, dodged = wait_until_img_appears_or_dodge_occurs(["lock_in.png"], max_tries=1)
+            x, dodged = wait_until_img_appears_or_dodge_occurs(["lock_in.png"], confidence=0.9, max_tries=2)
             if dodged: 
                 break
             if not x:
@@ -161,7 +164,7 @@ if __name__ == "__main__":
             if dodged:
                 continue
             gui.click(x)
-            gui.write(generate_random_fact(args.fact), random.uniform(0.05, 0.07))
+            gui.write(generate_random_fact(), random.uniform(0.05, 0.07))
             gui.press("enter")
 
         # End script if game starts
